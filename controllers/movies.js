@@ -1,7 +1,7 @@
 const Movie = require('../models/movie');
 
 const getMovies = (req, res, next) => {
-  Movie.find({ 'owner._id': req.params._id }).orFail() // TODO: Прописать ошибку
+  Movie.find({ owner: req.user._id }).orFail() // TODO: Прописать ошибку
     .populate(['owner'])
     .then((allMovies) => res.send(allMovies))
     .catch(next);
@@ -63,6 +63,7 @@ const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id).orFail() // TODO: Ошибка
     .then((movie) => {
       if (String(movie.owner._id) !== req.user._id) {
+        throw new Error('Нет прав');
         // TODO: Проверка доступа к карточке её владельца
       }
       return movie.deleteOne();
