@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
+const helmet = require('helmet');
 
 const { PORT, DB } = require('./config');
 const router = require('./routes');
@@ -19,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+
+app.use(helmet());
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
