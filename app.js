@@ -2,10 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 
 const { PORT, DB } = require('./config');
 const router = require('./routes');
-const { createUser, login } = require('./controllers/users');
+const { createUser, login, logout } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
@@ -17,6 +18,7 @@ const app = express();
 
 mongoose.connect(DB);
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -38,6 +40,7 @@ app.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
+app.post('/signout', logout);
 
 app.use(auth);
 

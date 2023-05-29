@@ -7,7 +7,7 @@ const { NODE_ENV, JWT_SECRET } = require('../config');
 const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
-const { notFoundUserErrorMessage, conflictErrorMessage, validationErrorMessage } = require('../constants/constants');
+const { notFoundUserErrorMessage, conflictErrorMessage, validationErrorMessage, logoutMessage } = require('../constants/constants');
 
 const createUser = (req, res, next) => {
   const {
@@ -83,9 +83,18 @@ const login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      res.send({ token });
+      res.cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+        sameSite: true,
+      })
+        .send({ token });
     })
     .catch(next);
+};
+
+const logout = (req, res) => {
+  res.clearCookie('jwt').json({ message: logoutMessage });
 };
 
 module.exports = {
@@ -93,4 +102,5 @@ module.exports = {
   getUser,
   updateUser,
   login,
+  logout,
 };
