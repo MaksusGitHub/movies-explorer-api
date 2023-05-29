@@ -9,6 +9,7 @@ const conflictErrorMessage = 'Пользователь с таким email уж�
 const validationErrorMessage = 'Некорректный формат входных данных';
 const AccessRightsMovieErrorMessage = 'Нет доступа к этому фильму';
 const notFoundErrorMessage = 'Страница не найдена';
+const logoutMessage = 'Выход успешно выполнен';
 
 module.exports = {
   URL_REG,
@@ -21,4 +22,5 @@ module.exports = {
   validationErrorMessage,
   AccessRightsMovieErrorMessage,
   notFoundErrorMessage,
+  logoutMessage,
 };
