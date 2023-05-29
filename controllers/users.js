@@ -1,8 +1,12 @@
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const { NODE_ENV, JWT_SECRET } = require('../config');
+const ConflictError = require('../errors/ConflictError');
+const ValidationError = require('../errors/ValidationError');
+const NotFoundError = require('../errors/NotFoundError');
 
 const createUser = (req, res, next) => {
   const {
@@ -22,11 +26,19 @@ const createUser = (req, res, next) => {
       email: user.email,
       _id: user._id,
     }))
-    .catch(next); // TODO: Обработка ошибок валидации и конфликта
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже существует'));
+      } else if (err instanceof mongoose.Error.ValidationError) {
+        next(new ValidationError('Некорректный формат входных данных'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.user._id).orFail() // TODO: Прописать ошибку
+  User.findById(req.user._id).orFail(new NotFoundError('Пользователя с таким ID нет'))
     .then((user) => res.send({
       _id: user._id,
       email: user.email,
@@ -45,13 +57,19 @@ const updateUser = (req, res, next) => {
       new: true,
       runValidators: true,
     },
-  ).orFail() // TODO: Добавить ошибку
+  ).orFail(new NotFoundError('Пользователя с таким ID нет'))
     .then((user) => res.send({
       _id: user._id,
       email: user.email,
       name: user.name,
     }))
-    .catch(next); // TODO: Обработать ошибку валидации
+    .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        next(new ValidationError('Некорректный формат входных данных'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const login = (req, res, next) => {
@@ -66,7 +84,7 @@ const login = (req, res, next) => {
       );
       res.send({ token });
     })
-    .catch(next); // TODO: Обработка ошибки
+    .catch(next);
 };
 
 module.exports = {
