@@ -8,7 +8,7 @@ const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
-const { EMAIL_REG } = require('./constants/constants');
+const { EMAIL_REG, notFoundErrorMessage } = require('./constants/constants');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
@@ -39,7 +39,7 @@ app.use(auth);
 app.use('/', router);
 
 app.use((req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
+  next(new NotFoundError(notFoundErrorMessage));
 });
 
 app.use(errorLogger);

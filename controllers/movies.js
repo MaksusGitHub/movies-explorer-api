@@ -4,6 +4,7 @@ const Movie = require('../models/movie');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const AccessRightsError = require('../errors/AccessRightsError');
+const { validationErrorMessage, notFoundMovieErrorMessage, AccessRightsMovieErrorMessage } = require('../constants/constants');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
@@ -63,7 +64,7 @@ const createMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new ValidationError('Некорректный формат входных данных'));
+        next(new ValidationError(validationErrorMessage));
       } else {
         next(err);
       }
@@ -71,7 +72,7 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.id).orFail(new NotFoundError('Фильма с таким ID нет'))
+  Movie.findById(req.params.id).orFail(new NotFoundError(notFoundMovieErrorMessage))
     .then((movie) => {
       if (String(movie.owner._id) !== req.user._id) {
         throw new AccessRightsError();
@@ -83,7 +84,7 @@ const deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof AccessRightsError) {
-        next(new AccessRightsError('Нет доступа к этому фильму'));
+        next(new AccessRightsError(AccessRightsMovieErrorMessage));
       } else {
         next(err);
       }

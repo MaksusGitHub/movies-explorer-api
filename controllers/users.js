@@ -7,6 +7,7 @@ const { NODE_ENV, JWT_SECRET } = require('../config');
 const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
+const { notFoundUserErrorMessage, conflictErrorMessage, validationErrorMessage } = require('../constants/constants');
 
 const createUser = (req, res, next) => {
   const {
@@ -28,9 +29,9 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
+        next(new ConflictError(conflictErrorMessage));
       } else if (err instanceof mongoose.Error.ValidationError) {
-        next(new ValidationError('Некорректный формат входных данных'));
+        next(new ValidationError(validationErrorMessage));
       } else {
         next(err);
       }
@@ -38,7 +39,7 @@ const createUser = (req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.user._id).orFail(new NotFoundError('Пользователя с таким ID нет'))
+  User.findById(req.user._id).orFail(new NotFoundError(notFoundUserErrorMessage))
     .then((user) => res.send({
       _id: user._id,
       email: user.email,
@@ -57,7 +58,7 @@ const updateUser = (req, res, next) => {
       new: true,
       runValidators: true,
     },
-  ).orFail(new NotFoundError('Пользователя с таким ID нет'))
+  ).orFail(new NotFoundError(notFoundUserErrorMessage))
     .then((user) => res.send({
       _id: user._id,
       email: user.email,
@@ -65,7 +66,7 @@ const updateUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new ValidationError('Некорректный формат входных данных'));
+        next(new ValidationError(validationErrorMessage));
       } else {
         next(err);
       }
