@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const { PORT, DB } = require('./config');
 const router = require('./routes');
@@ -14,6 +15,11 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
 mongoose.connect(DB);
 
 app.use(express.json());
@@ -22,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.use(helmet());
+app.use(limiter);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
