@@ -1,7 +1,12 @@
+const mongoose = require('mongoose');
+
 const Movie = require('../models/movie');
+const ValidationError = require('../errors/ValidationError');
+const NotFoundError = require('../errors/NotFoundError');
+const AccessRightsError = require('../errors/AccessRightsError');
 
 const getMovies = (req, res, next) => {
-  Movie.find({ owner: req.user._id }).orFail() // TODO: Прописать ошибку
+  Movie.find({ owner: req.user._id })
     .populate(['owner'])
     .then((allMovies) => res.send(allMovies))
     .catch(next);
@@ -56,22 +61,33 @@ const createMovie = (req, res, next) => {
         }))
         .catch(next);
     })
-    .catch(next); // TODO: Проверить на валидацию
+    .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        next(new ValidationError('Некорректный формат входных данных'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.id).orFail() // TODO: Ошибка
+  Movie.findById(req.params.id).orFail(new NotFoundError('Фильма с таким ID нет'))
     .then((movie) => {
       if (String(movie.owner._id) !== req.user._id) {
-        throw new Error('Нет прав');
-        // TODO: Проверка доступа к карточке её владельца
+        throw new AccessRightsError();
       }
       return movie.deleteOne();
     })
     .then((deletedMovie) => {
       res.send(deletedMovie);
     })
-    .catch(next); // TODO: Обработка ошибки на права доступа
+    .catch((err) => {
+      if (err instanceof AccessRightsError) {
+        next(new AccessRightsError('Нет доступа к этому фильму'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = {

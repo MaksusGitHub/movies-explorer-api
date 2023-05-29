@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 
 const { URL_REG } = require('../constants/constants');
 
-// TODO: Проверить работу валидации URL через пакет validator (https://www.npmjs.com/package/validator)
-// TODO: Добавить валидацию к году выпуска фильма
-// TODO: Вынести валидацию в отдельный модуль
-
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
