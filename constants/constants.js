@@ -10,6 +10,7 @@ const VALIDATION_ERROR_MESSAGE = 'Некорректный формат вход
 const ACCESS_RIGHTS_MOVIES_ERROR_MESSAGE = 'Нет доступа к этому фильму';
 const NOT_FOUND_ERROR_MESSAGE = 'Страница не найдена';
 const LOGOUT_MESSAGE = 'Выход успешно выполнен';
+const LOGIN_MESSAGE = 'Вы успешно авторизованы';
 
 module.exports = {
   URL_REG,
@@ -23,4 +24,5 @@ module.exports = {
   ACCESS_RIGHTS_MOVIES_ERROR_MESSAGE,
   NOT_FOUND_ERROR_MESSAGE,
   LOGOUT_MESSAGE,
+  LOGIN_MESSAGE,
 };
