@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const { EMAIL_REG, authErrorMessage, wrongCredentialsErrorMessage } = require('../constants/constants');
+const { EMAIL_REG, AUTH_ERROR_MESSAGE, WRONG_CREDENTIALS_ERROR_MESSAGE } = require('../constants/constants');
 const AuthError = require('../errors/AuthError');
 
 const userSchema = new mongoose.Schema({
@@ -33,12 +33,12 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthError(authErrorMessage);
+        throw new AuthError(AUTH_ERROR_MESSAGE);
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new AuthError(wrongCredentialsErrorMessage);
+            throw new AuthError(WRONG_CREDENTIALS_ERROR_MESSAGE);
           }
           return user;
         });

@@ -8,7 +8,7 @@ const { PORT, DB } = require('./config');
 const router = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
-const { notFoundErrorMessage } = require('./constants/constants');
+const { NOT_FOUND_ERROR_MESSAGE } = require('./constants/constants');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/rateLimiter');
 
@@ -28,7 +28,7 @@ app.use(limiter);
 app.use('/', router);
 
 app.use((req, res, next) => {
-  next(new NotFoundError(notFoundErrorMessage));
+  next(new NotFoundError(NOT_FOUND_ERROR_MESSAGE));
 });
 
 app.use(errorLogger);

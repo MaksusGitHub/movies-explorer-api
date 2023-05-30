@@ -4,7 +4,7 @@ const Movie = require('../models/movie');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const AccessRightsError = require('../errors/AccessRightsError');
-const { validationErrorMessage, notFoundMovieErrorMessage, AccessRightsMovieErrorMessage } = require('../constants/constants');
+const { VALIDATION_ERROR_MESSAGE, NOT_FOUND_MOVIE_ERROR_MESSAGE, ACCESS_RIGHTS_MOVIES_ERROR_MESSAGE } = require('../constants/constants');
 
 const getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
@@ -64,7 +64,7 @@ const createMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new ValidationError(validationErrorMessage));
+        next(new ValidationError(VALIDATION_ERROR_MESSAGE));
       } else {
         next(err);
       }
@@ -72,7 +72,7 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.id).orFail(new NotFoundError(notFoundMovieErrorMessage))
+  Movie.findById(req.params.id).orFail(new NotFoundError(NOT_FOUND_MOVIE_ERROR_MESSAGE))
     .then((movie) => {
       if (String(movie.owner._id) !== req.user._id) {
         throw new AccessRightsError();
@@ -84,7 +84,7 @@ const deleteMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err instanceof AccessRightsError) {
-        next(new AccessRightsError(AccessRightsMovieErrorMessage));
+        next(new AccessRightsError(ACCESS_RIGHTS_MOVIES_ERROR_MESSAGE));
       } else {
         next(err);
       }
