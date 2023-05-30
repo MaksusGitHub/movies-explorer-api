@@ -8,7 +8,7 @@ const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const {
-  notFoundUserErrorMessage, conflictErrorMessage, validationErrorMessage, logoutMessage,
+  NOT_FOUND_USER_ERROR_MESSAGE, CONFLICT_ERROR_MESSAGE, VALIDATION_ERROR_MESSAGE, LOGOUT_MESSAGE,
 } = require('../constants/constants');
 
 const createUser = (req, res, next) => {
@@ -31,9 +31,9 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError(conflictErrorMessage));
+        next(new ConflictError(CONFLICT_ERROR_MESSAGE));
       } else if (err instanceof mongoose.Error.ValidationError) {
-        next(new ValidationError(validationErrorMessage));
+        next(new ValidationError(VALIDATION_ERROR_MESSAGE));
       } else {
         next(err);
       }
@@ -41,7 +41,7 @@ const createUser = (req, res, next) => {
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.user._id).orFail(new NotFoundError(notFoundUserErrorMessage))
+  User.findById(req.user._id).orFail(new NotFoundError(NOT_FOUND_USER_ERROR_MESSAGE))
     .then((user) => res.send({
       _id: user._id,
       email: user.email,
@@ -60,7 +60,7 @@ const updateUser = (req, res, next) => {
       new: true,
       runValidators: true,
     },
-  ).orFail(new NotFoundError(notFoundUserErrorMessage))
+  ).orFail(new NotFoundError(NOT_FOUND_USER_ERROR_MESSAGE))
     .then((user) => res.send({
       _id: user._id,
       email: user.email,
@@ -68,7 +68,7 @@ const updateUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        next(new ValidationError(validationErrorMessage));
+        next(new ValidationError(VALIDATION_ERROR_MESSAGE));
       } else {
         next(err);
       }
@@ -96,7 +96,7 @@ const login = (req, res, next) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie('jwt').json({ message: logoutMessage });
+  res.clearCookie('jwt').json({ message: LOGOUT_MESSAGE });
 };
 
 module.exports = {
