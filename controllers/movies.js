@@ -75,20 +75,14 @@ const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.id).orFail(new NotFoundError(NOT_FOUND_MOVIE_ERROR_MESSAGE))
     .then((movie) => {
       if (String(movie.owner._id) !== req.user._id) {
-        throw new AccessRightsError();
+        throw new AccessRightsError(ACCESS_RIGHTS_MOVIES_ERROR_MESSAGE);
       }
       return movie.deleteOne();
     })
     .then((deletedMovie) => {
       res.send(deletedMovie);
     })
-    .catch((err) => {
-      if (err instanceof AccessRightsError) {
-        next(new AccessRightsError(ACCESS_RIGHTS_MOVIES_ERROR_MESSAGE));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 module.exports = {
