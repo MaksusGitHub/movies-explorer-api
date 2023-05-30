@@ -8,7 +8,11 @@ const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const {
-  NOT_FOUND_USER_ERROR_MESSAGE, CONFLICT_ERROR_MESSAGE, VALIDATION_ERROR_MESSAGE, LOGOUT_MESSAGE,
+  NOT_FOUND_USER_ERROR_MESSAGE,
+  CONFLICT_ERROR_MESSAGE,
+  VALIDATION_ERROR_MESSAGE,
+  LOGOUT_MESSAGE,
+  LOGIN_MESSAGE,
 } = require('../constants/constants');
 
 const createUser = (req, res, next) => {
@@ -91,8 +95,8 @@ const login = (req, res, next) => {
         maxAge: 3600000,
         httpOnly: true,
         sameSite: true,
-      })
-        .send({ token });
+      });
+      res.send({ message: LOGIN_MESSAGE });
     })
     .catch(next);
 };
