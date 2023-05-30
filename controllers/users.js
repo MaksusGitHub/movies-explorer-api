@@ -67,7 +67,9 @@ const updateUser = (req, res, next) => {
       name: user.name,
     }))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
+      if (err.code === 11000) {
+        next(new ConflictError(CONFLICT_ERROR_MESSAGE));
+      } else if (err instanceof mongoose.Error.ValidationError) {
         next(new ValidationError(VALIDATION_ERROR_MESSAGE));
       } else {
         next(err);
