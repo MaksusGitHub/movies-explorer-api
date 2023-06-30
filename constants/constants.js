@@ -19,6 +19,7 @@ const CORS_OPTIONS = {
     'http://localhost:3001',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 };
