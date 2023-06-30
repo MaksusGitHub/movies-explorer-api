@@ -16,8 +16,6 @@ const CORS_OPTIONS = {
   origin: [
     'https://maksus.movies-explorer.nomoredomains.rocks',
     'http://maksus.movies-explorer.nomoredomains.rocks',
-    'https://api.maksus.movies-explorer.nomoredomains.rocks',
-    'http://api.maksus.movies-explorer.nomoredomains.rocks',
     'http://localhost:3001',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
