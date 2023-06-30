@@ -14,9 +14,9 @@ const LOGIN_MESSAGE = 'Вы успешно авторизованы';
 
 const CORS_OPTIONS = {
   origin: [
-    'https://api.maksus.movie-explorer.nomoredomains.rocks',
-    'http://api.maksus.movie-explorer.nomoredomains.rocks',
-    'http://localhost:3000',
+    'https://maksus.movies-explorer.nomoredomains.rocks',
+    'http://maksus.movies-explorer.nomoredomains.rocks',
+    'http://localhost:3001',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
