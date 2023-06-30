@@ -96,7 +96,7 @@ const login = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       });
-      res.send({ message: LOGIN_MESSAGE });
+      res.send({ token, message: LOGIN_MESSAGE });
     })
     .catch(next);
 };
