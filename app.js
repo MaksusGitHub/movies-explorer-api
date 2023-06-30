@@ -17,29 +17,27 @@ const app = express();
 
 mongoose.connect(DB);
 
-// const allowedCors = [
-//   'https://maksus.movies-explorer.nomoredomains.rocks',
-//   'http://maksus.movies-explorer.nomoredomains.rocks',
-//   'http://localhost:3001',
-// ];
+const allowedCors = [
+  'https://maksus.movies-explorer.nomoredomains.rocks',
+  'http://maksus.movies-explorer.nomoredomains.rocks',
+  'http://localhost:3001',
+];
 
 app.use((req, res, next) => {
-  // const { origin } = req.headers;
+  const { origin } = req.headers;
 
-  // if (allowedCors.includes(origin)) {
-  //   res.header('Access-Control-Allow-Origin', origin);
-  // }
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
 
   const { method } = req;
 
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   const requestHeaders = req.headers['access-control-request-headers'];
 
-  res.header('Access-Control-Allow-Origin', '*');
-
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-
+    res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Headers', requestHeaders);
 
     return res.end();
