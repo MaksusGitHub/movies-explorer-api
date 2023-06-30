@@ -12,6 +12,17 @@ const NOT_FOUND_ERROR_MESSAGE = 'Страница не найдена';
 const LOGOUT_MESSAGE = 'Выход успешно выполнен';
 const LOGIN_MESSAGE = 'Вы успешно авторизованы';
 
+const CORS_OPTIONS = {
+  origin: [
+    'https://maksus.movies-explorer.nomoredomains.rocks',
+    'http://maksus.movies-explorer.nomoredomains.rocks',
+    'http://localhost:3001',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+  credentials: true,
+};
+
 module.exports = {
   URL_REG,
   EMAIL_REG,
@@ -25,4 +36,5 @@ module.exports = {
   NOT_FOUND_ERROR_MESSAGE,
   LOGOUT_MESSAGE,
   LOGIN_MESSAGE,
+  CORS_OPTIONS,
 };
